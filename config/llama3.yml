@@ -1,0 +1,38 @@
+paths:
+  model_name_or_path:
+    win: meta-llama/Llama-3.1-8B-Instruct
+    linux: meta-llama/Llama-3.1-8B-Instruct
+  save_root_dir:
+    win: result
+    linux: result
+
+# behavior
+benchmark: CMMLU
+model: Llama3Based  # model-benchmark class name
+do_benchmark: true
+do_test_infer: true
+
+# generate_config, only take effect at generate mode
+skip_special_tokens: true  # set true to avoid show special_tokens such as pad_token
+max_new_tokens: 512
+do_sample: True
+num_beams: 5
+temperature: 0.9
+top_p: 0.75
+top_k: 50
+
+# benchmark_config, only take effect at benchmark mode
+few_shot: 5  # set 0 means zero-shot
+random_shot: true
+max_length: 4096
+batch_size: 8
+strict_bhm: false  # strict: use the output of last token to match label, otherwise use the highest logits of add choices
+force_refresh: false
+
+generate_input:
+  - '请介绍一下你自己。'
+  - '你的中文能力怎么样'
+  - '1+1等于几？'
+  - '求解方程: 3x + 10 = 13, 请按步骤一步一步求解答案。'
+  - '笼子里有若干只鸡和兔，从上面数有8个头，从下面数有20只脚，鸡和兔各有多少只？请一步一步求解答案。'
+

@@ -1,3 +1,9 @@
+# temp file
+temp_test.ipynb
+
+# IDE
+.idea/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -1,0 +1,17 @@
+paths:
+  model_name_or_path:
+    win: random
+    linux: random
+  save_root_dir:
+    win: result
+    linux: result
+
+# behavior
+benchmark: CMMLU
+model: Random  # model-benchmark class name
+do_benchmark: true
+
+# benchmark_config, only take effect at benchmark mode
+few_shot: 0  # set 0 means zero-shot
+force_refresh: false
+
