@@ -8,7 +8,7 @@ paths:
 
 # behavior
 benchmark: CMMLU
-model: Llama3Based  # model-benchmark class name
+model: Llama3  # model-benchmark class name
 do_benchmark: true
 do_test_infer: true
 

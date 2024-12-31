@@ -87,25 +87,6 @@ class CMMLU:
         self.subjects = sorted([f.split(".csv")[0] for f in os.listdir(os.path.join(cfg.data_dir, "test/"))])
         print(f'##### init CMMLU benchmark, data dir: {self.data_dir}, subjects num: {len(self.subjects)}\n')
 
-    def get_subject(self):
-        for subject in self.subjects:
-            dev_df = pd.read_csv(os.path.join(self.data_dir, "dev", subject + ".csv"), header=0, index_col=0)
-            test_df = pd.read_csv(os.path.join(self.data_dir, "test", subject + ".csv"), header=0, index_col=0)
-
-            choices = self.get_choices(test_df)
-            dev_qst, dev_ans = self.get_question_answer(dev_df)
-            test_qst, test_ans = self.get_question_answer(test_df)
-            yield ChoiceBenchmark(benchmark=self.benchmark,
-                                  name_EN = subject,
-                                  name_CH= name_en2zh[subject],
-                                  choices=choices,
-                                  test_qst=test_qst,
-                                  test_ans=test_ans,
-                                  dev_qst=dev_qst,
-                                  dev_ans=dev_ans,
-                                  )
-
-
     def get_choices(self, df: pd.DataFrame):
         return list(df.columns)[1: -1]
 
@@ -123,4 +104,80 @@ class CMMLU:
             qst.append(prompt)
 
         return qst, ans
+
+    def run_benchmark(self, model_api):
+        print(f'----- run CMMLU benchmark, model {self.cfg.model} -----')
+        os.makedirs(self.cfg.result_dir, exist_ok=True)
+
+        for subject in self.subjects:
+            dev_df = pd.read_csv(os.path.join(self.data_dir, "dev", subject + ".csv"), header=0, index_col=0)
+            test_df = pd.read_csv(os.path.join(self.data_dir, "test", subject + ".csv"), header=0, index_col=0)
+
+            choices = self.get_choices(test_df)
+            dev_qst, dev_ans = self.get_question_answer(dev_df)
+            test_qst, test_ans = self.get_question_answer(test_df)
+
+            result_csv = os.path.join(self.cfg.result_dir, f"result_{subject}.csv")
+            if not self.cfg.force_refresh and os.path.exists(result_csv):  # If result file exist, skip this subject
+                continue
+
+            generate_results, choice_results, logits = model_api(
+                ChoiceBenchmark(benchmark=self.benchmark,
+                                name_EN=subject,
+                                name_CH=name_en2zh[subject],
+                                choices=choices,
+                                test_qst=test_qst,
+                                test_ans=test_ans,
+                                dev_qst=dev_qst,
+                                dev_ans=dev_ans)
+            )
+
+            assert len(test_qst) == len(generate_results) == len(choice_results) == len(logits)
+            result_df = pd.DataFrame({
+                'question': test_qst,
+                'label': test_ans,
+                'generate_result': generate_results,
+                'choice_result': choice_results,
+                'logits': logits,
+            })
+            result_df.to_csv(result_csv, encoding='utf-8', index=False)
+
+        self.summary()
+        print(f'---------- run CMMLU benchmark finish. ----------')
+
+    def summary(self):
+        summary = os.path.join(self.cfg.result_dir, '0.summary.txt')
+        if not self.cfg.force_refresh and os.path.exists(summary):
+            return
+
+        subject_result_csv = os.listdir(self.cfg.result_dir)
+        subject_result_csv = list(filter(lambda f: f.endswith('.csv'), subject_result_csv))
+
+        total_acc = 0.
+        total_items = 0
+        summary_str = ''
+        for csv in sorted(subject_result_csv):
+            subject_name = csv.split('.')[-2].split('result_')[-1]
+            csv_f = os.path.join(self.cfg.result_dir, csv)
+            subject_df = pd.read_csv(csv_f, encoding='utf-8', index_col=None)
+
+            if self.cfg.strict_bhm:
+                subject_acc = (subject_df['label'] == subject_df['generate_result']).sum()
+            else:
+                subject_acc = (subject_df['label'] == subject_df['choice_result']).sum()
+            subject_item_count = len(subject_df)
+
+            total_acc += subject_acc
+            total_items += subject_item_count
+
+            temp_str = f'subject: {subject_name:<25} | num: {subject_item_count:<5} | ' \
+                       f'acc: {subject_acc / subject_item_count:.5f}'
+            print(temp_str)
+            summary_str += f'{temp_str}\n'
+
+        temp_str = f'summary: num {total_items} | acc {total_acc / total_items:.5f}'
+        print(temp_str)
+        summary_str = temp_str + '\n\n' + summary_str
+        with open(summary, 'w', encoding='utf-8') as f:
+            f.write(summary_str)
 

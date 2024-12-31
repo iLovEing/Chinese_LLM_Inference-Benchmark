@@ -1,8 +1,5 @@
-
-import os
 import random
 import torch
-import pandas as pd
 from tqdm import tqdm
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
@@ -41,7 +38,7 @@ PROMPT_TEMPLATES = [
 ]
 
 
-class Llama3Based(BaseBHM):
+class Llama3(BaseBHM):
     def __init__(self, cfg: BenchmarkConfig):
         super().__init__(cfg)
 
@@ -93,22 +90,22 @@ class Llama3Based(BaseBHM):
 
         print(f'---------- run generate finish. ----------')
 
-    def generate_bhm_prompt(self, subject: ChoiceBenchmark):
+    def generate_choice_bhm_prompt(self, bhm_subject: ChoiceBenchmark):
         """
         generate prompt according to few_shot and max_length
         """
+        name = bhm_subject.name_CH
+        test_qst = bhm_subject.test_qst
+        dev_qst = bhm_subject.dev_qst
+        dev_ans = bhm_subject.dev_ans
         prompts = []
-        labels = []
-        test_qst, test_ans = subject.test_qst, subject.test_ans
-        dev_qst, dev_ans = subject.dev_qst, subject.dev_ans
         few_shot_ids = list(range(len(dev_qst)))
 
         for idx in range(len(test_qst)):
             if self.cfg.random_shot:
                 random.shuffle(few_shot_ids)
             question = test_qst[idx]
-            answer = test_ans[idx]
-            input_head = f'以下是关于{subject.name_CH}的单项选择题，请直接给出正确答案的选项。\n\n'
+            input_head = f'以下是关于{name}的单项选择题，请直接给出正确答案的选项。\n\n'
 
             few_shot_count = min(self.cfg.few_shot, len(few_shot_ids))
             few_shot_id = 0
@@ -136,32 +133,25 @@ class Llama3Based(BaseBHM):
                 few_shot_id += 1
 
             prompts.append(final_input)
-            labels.append(answer)
+        return prompts
 
-        return prompts, test_qst, labels,
-
-    def run_choice_benchmark(self, subject: ChoiceBenchmark):
+    def choice_bhm_api(self, bhm_subject: ChoiceBenchmark):
         assert self.cfg.few_shot >= 0, f'invalid arg few_shot: {self.cfg.few_shot}'
 
-        result_csv = os.path.join(self.cfg.result_dir, f"result_{subject.name_EN}.csv")
-        if not self.cfg.force_refresh and os.path.exists(result_csv):  # If result file exist, skip this subject
-            return
-
-        prompts, questions, labels = self.generate_bhm_prompt(subject)
-
-        choice_tokenizer_idx = []
-        for _choice in subject.choices:
-            choice_tokenizer_idx += self.tokenizer.encode(_choice, add_special_tokens=False)
+        prompts = self.generate_choice_bhm_prompt(bhm_subject)
         infer_loader = DataLoader(prompts,
                                   batch_size=self.cfg.batch_size,
                                   shuffle=False,
                                   collate_fn=lambda x: self.tokenizer(x, padding=True, return_tensors="pt", add_special_tokens=False))
 
+        choice_tokenizer_idx = []
+        for _choice in bhm_subject.choices:
+            choice_tokenizer_idx += self.tokenizer.encode(_choice, add_special_tokens=False)
         generate_results = []
         choice_results = []
         logits = []
         with torch.no_grad():
-            for batch in tqdm(infer_loader, desc=f'run choice benchmark [{subject.benchmark}-{subject.name_EN}-{subject.name_CH}]'):
+            for batch in tqdm(infer_loader, desc=f'run choice benchmark [{self.cfg.benchmark}-{bhm_subject.name_EN}-{bhm_subject.name_CH}]'):
                 for _k, _ in batch.items():
                     batch[_k] = batch[_k].to(self.model.device)
                 model_output = self.model(**batch)
@@ -172,17 +162,10 @@ class Llama3Based(BaseBHM):
                 generate_results += generate_result
 
                 choice_logits = generate_logits[:, choice_tokenizer_idx]
-                choice_result = [subject.choices[i] for i in choice_logits.argmax(-1).tolist()]
+                choice_result = [bhm_subject.choices[i] for i in choice_logits.argmax(-1).tolist()]
                 choice_results += choice_result
                 for _idx in range(choice_logits.shape[0]):
                     logits.append(','.join(map(str, choice_logits[_idx].tolist())))
 
-        assert len(prompts) == len(generate_results) == len(choice_results) == len(logits)
-        result_df = pd.DataFrame({
-            'question': questions,
-            'label': labels,
-            'generate_result': generate_results,
-            'choice_result': choice_results,
-            'logits': logits,
-        })
-        result_df.to_csv(result_csv, encoding='utf-8', index=False)
+        return generate_results, choice_results, logits
+

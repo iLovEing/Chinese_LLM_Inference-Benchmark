@@ -1,6 +1,9 @@
 # temp file
 temp_test.ipynb
 
+#dataset
+*.csv
+
 # IDE
 .idea/
 

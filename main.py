@@ -26,7 +26,7 @@ def main():
     if benchmark_cfg.do_test_infer:
         model.run_generate()
     if benchmark_cfg.do_benchmark:
-        model.run_benchmark(benchmark)
+        benchmark.run_benchmark(model.choice_bhm_api)
 
 
 if __name__ == '__main__':

@@ -65,9 +65,8 @@ class BenchmarkConfig:
         # set default config
         if 'data_dir' not in yaml_cfg:
             yaml_cfg['data_dir'] = os.path.join('dataset', yaml_cfg['benchmark'].lower())
-        model_name = os.path.basename(yaml_cfg['model_name_or_path'])  # may not support windows paths
         save_root_dir = yaml_cfg['save_root_dir'] if 'save_root_dir' in yaml_cfg else 'result'
-        yaml_cfg['result_dir'] = os.path.join(save_root_dir, f'{model_name}', f'{yaml_cfg["benchmark"]}', f'{yaml_cfg["few_shot"]}_shot')
+        yaml_cfg['result_dir'] = os.path.join(save_root_dir, f'{yaml_cfg["model"]}', f'{yaml_cfg["benchmark"]}', f'{yaml_cfg["few_shot"]}_shot')
         yaml_cfg.pop('save_root_dir')
 
     def parse_config(self):
