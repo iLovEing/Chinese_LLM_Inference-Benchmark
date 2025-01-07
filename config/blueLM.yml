@@ -9,8 +9,9 @@ paths:
 # behavior
 benchmark: CMMLU
 model: BlueLM  # model-benchmark class name
-do_benchmark: true
-do_test_infer: false
+load_in_8bit: false
+do_benchmark: false
+do_test_infer: true
 
 # generate_config, only take effect at generate mode
 skip_special_tokens: true  # set true to avoid show special_tokens such as pad_token when decoding

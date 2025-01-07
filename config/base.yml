@@ -9,6 +9,7 @@ paths:
 # behavior
 benchmark: CMMLU
 model: Llama3  # model-benchmark class name
+load_in_8bit: false
 do_benchmark: true
 do_test_infer: true
 
@@ -20,6 +21,13 @@ num_beams: 5
 temperature: 0.9
 top_p: 0.75
 top_k: 50
+generate_input:
+  - '请介绍一下你自己。'
+  - '你的中文能力怎么样'
+  - '1+1等于几？'
+  - '求解方程: 3x + 10 = 13, 请按步骤一步一步求解答案。'
+  - '笼子里有若干只鸡和兔，从上面数有8个头，从下面数有20只脚，鸡和兔各有多少只？请一步一步求解答案。'
+
 
 # benchmark_config, only take effect at benchmark mode
 few_shot: 5  # set 0 means zero-shot
@@ -28,11 +36,4 @@ max_length: 4096
 batch_size: 8
 strict_bhm: false
 force_refresh: false
-
-generate_input:
-  - '请介绍一下你自己。'
-  - '你的中文能力怎么样'
-  - '1+1等于几？'
-  - '求解方程: 3x + 10 = 13, 请按步骤一步一步求解答案。'
-  - '笼子里有若干只鸡和兔，从上面数有8个头，从下面数有20只脚，鸡和兔各有多少只？请一步一步求解答案。'
 

@@ -1,5 +1,5 @@
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
+from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig, BitsAndBytesConfig
 
 from .model_base import BaseBHM
 from util import BenchmarkConfig
@@ -11,7 +11,7 @@ llama3 key special token
 <|start_header_id|>{role}<|end_header_id|>: role token(128006, 128007)
 """
 
-PROMPT_ID = 1
+PROMPT_ID = 2
 PROMPT_TEMPLATES = [
     # 0. no template
     '{}',  # filled with format string
@@ -45,13 +45,16 @@ class Llama3(BaseBHM):
 
         print(f'---------- initialize model {self.cfg.model_name_or_path} ----------')
         print(f'##### loading tokenizer...')
-        self.tokenizer = AutoTokenizer.from_pretrained(cfg.model_name_or_path, trust_remote_code=True, add_bos_token=True, add_eos_token=False)
+        self.tokenizer = AutoTokenizer.from_pretrained(cfg.model_name_or_path, trust_remote_code=True,
+                                                       add_bos_token=True, add_eos_token=False)
         self.tokenizer.pad_token = self.tokenizer.eos_token
         self.tokenizer.padding_side = 'left'
         self.show_tokenizer()
 
         print('##### loading model...')
-        self.model = AutoModelForCausalLM.from_pretrained(cfg.model_name_or_path, torch_dtype=torch.bfloat16, device_map="auto")
+        quant_cfg = BitsAndBytesConfig(load_in_8bit=True) if self.cfg.load_in_8bit else None
+        self.model = AutoModelForCausalLM.from_pretrained(cfg.model_name_or_path, torch_dtype=torch.bfloat16,
+                                                          device_map="auto", quantization_config=quant_cfg)
         self.model.eval()
         self.show_model()
 

@@ -15,6 +15,7 @@ class BenchmarkConfig:
     # behavior
     benchmark: str = None
     model: str = None  # model-benchmark class name
+    load_in_8bit: bool = False
     do_test_infer: bool = False
     do_benchmark: bool = False
 
@@ -26,6 +27,7 @@ class BenchmarkConfig:
     temperature: float = 0.9
     top_p: float = 0.75
     top_k: float = 50
+    generate_input: list[str] = ()  # test infer input
 
     # benchmark config
     few_shot: int = 5  # set 0 means zero-shot
@@ -35,8 +37,6 @@ class BenchmarkConfig:
     strict_bhm: bool = False  # if
     force_refresh: bool = False
 
-    # test infer input
-    generate_input: list[str] = ()
 
     def __init__(self, cfg_path):
         print(f'---------- read config {cfg_path} ----------')

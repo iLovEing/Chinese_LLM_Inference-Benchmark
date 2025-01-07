@@ -1,5 +1,5 @@
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
+from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
 from .model_base import BaseBHM
 from util import BenchmarkConfig
@@ -30,12 +30,16 @@ class BlueLM(BaseBHM):
 
         print(f'---------- initialize model {self.cfg.model_name_or_path} ----------')
         print(f'##### loading tokenizer...')
-        self.tokenizer = AutoTokenizer.from_pretrained(cfg.model_name_or_path, trust_remote_code=True, use_fast=False, add_bos_token=True, add_eos_token=False)
+        self.tokenizer = AutoTokenizer.from_pretrained(cfg.model_name_or_path, trust_remote_code=True, use_fast=False,
+                                                       add_bos_token=True, add_eos_token=False)
         self.tokenizer.padding_side = 'left'
         self.show_tokenizer()
 
         print('##### loading model...')
-        self.model = AutoModelForCausalLM.from_pretrained(cfg.model_name_or_path, torch_dtype=torch.bfloat16, trust_remote_code=True, device_map="auto")
+        quant_cfg = BitsAndBytesConfig(load_in_8bit=True) if self.cfg.load_in_8bit else None
+        self.model = AutoModelForCausalLM.from_pretrained(cfg.model_name_or_path, torch_dtype=torch.bfloat16,
+                                                          trust_remote_code=True, device_map="auto",
+                                                          quantization_config=quant_cfg)
         self.model.eval()
         self.show_model()
 
