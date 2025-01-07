@@ -117,7 +117,8 @@ class CMMLU:
             dev_qst, dev_ans = self.get_question_answer(dev_df)
             test_qst, test_ans = self.get_question_answer(test_df)
 
-            result_csv = os.path.join(self.cfg.result_dir, f"result_{subject}.csv")
+            result_csv_name = f'{"un" if not self.cfg.strict_bhm else ""}strict_{self.cfg.few_shot}_shot_{subject}.csv'
+            result_csv = os.path.join(self.cfg.result_dir, result_csv_name)
             if not self.cfg.force_refresh and os.path.exists(result_csv):  # If result file exist, skip this subject
                 continue
 
@@ -146,7 +147,8 @@ class CMMLU:
         print(f'---------- run CMMLU benchmark finish. ----------')
 
     def summary(self):
-        summary = os.path.join(self.cfg.result_dir, '0.summary.txt')
+        summary_file_name = f'_{"un" if not self.cfg.strict_bhm else ""}strict_{self.cfg.few_shot}_shot_summary.txt'
+        summary = os.path.join(self.cfg.result_dir, summary_file_name)
         if not self.cfg.force_refresh and os.path.exists(summary):
             return
 

@@ -12,6 +12,5 @@ model: Random  # model-benchmark class name
 do_benchmark: true
 
 # benchmark_config, only take effect at benchmark mode
-few_shot: 0  # set 0 means zero-shot
 force_refresh: false
 

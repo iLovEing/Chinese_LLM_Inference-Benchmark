@@ -9,11 +9,11 @@ def main():
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config_name", type=str, default="base")
+    parser.add_argument("--config", type=str, default="base.yml")
     args = parser.parse_args()
 
     # read config
-    benchmark_cfg = BenchmarkConfig(cfg_path=os.path.join('config', f'{args.config_name}.yml'))\
+    benchmark_cfg = BenchmarkConfig(cfg_path=os.path.join('config', args.config))
 
     # get benchmark
     benchmark_module = getattr(importlib.import_module('benchmark'), benchmark_cfg.benchmark)
