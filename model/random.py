@@ -1,7 +1,7 @@
 import random
 import numpy as np
 
-from .model_base import BaseBHM
+from ._base import BaseBHM
 from util import BenchmarkConfig
 from benchmark import ChoiceBenchmark
 

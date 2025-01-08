@@ -1,2 +1,2 @@
 from .cmmlu import CMMLU
-from .bhm_base import ChoiceBenchmark
+from ._base import ChoiceBenchmark

@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-from .bhm_base import ChoiceBenchmark
+from ._base import ChoiceBenchmark
 from util import BenchmarkConfig
 
 
@@ -179,7 +179,8 @@ class CMMLU:
             print(temp_str)
             summary_str += f'{temp_str}\n'
 
-        temp_str = f'summary: num {total_items} | acc {total_acc / total_items:.5f}'
+        temp_str = (f'summary: total num {total_items} | acc {total_acc / total_items:.5f}\n'
+                    f'model: [{self.cfg.model}]-[{self.cfg.model_name_or_path}]')
         print(temp_str)
         summary_str = temp_str + '\n\n' + summary_str
         with open(summary, 'w', encoding='utf-8') as f:

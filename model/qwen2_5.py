@@ -5,10 +5,9 @@ from ._base import BaseBHM
 from util import BenchmarkConfig
 
 """
-llama3 key special token
-<|begin_of_text|>, <|end_of_text|>: BOS(128000), EOS(128001)
-<|eot_id|>: segment end token (128009)
-<|start_header_id|>{role}<|end_header_id|>: role token(128006, 128007)
+qwen2.5 key special token
+<|im_start|>, <|im_end|>: BOS(151644), EOS(151645), BOS was inserted at EVERY head of segment
+<|endoftext|>: pad token (151643)
 """
 
 PROMPT_ID = 2
@@ -17,37 +16,35 @@ PROMPT_TEMPLATES = [
     '{}',  # filled with format string
 
     # 1. english template 1
-    '<|start_header_id|>system<|end_header_id|>\n\n'
-    'You are a helpful AI assistant.'
-    '<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n'
-    '{}'  # filled with format string
-    '<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n',
+    '<|im_start|>system\n'
+    'You are Qwen, created by Alibaba Cloud. You are a helpful assistant.<|im_end|>\n'
+    '<|im_start|>user\n'
+    '{}<|im_end|>\n'  # filled with format string
+    '<|im_start|>assistant\n',
 
     # 2. english template 2
-    '<|start_header_id|>system<|end_header_id|>\n\n'
-    'You are a helpful AI assistant, 请用简体中文回答.'
-    '<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n'
-    '{}'  # filled with format string
-    '<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n',
+    '<|im_start|>system\n'
+    'You are Qwen, created by Alibaba Cloud. You are a helpful assistant. 请用简体中文回答。<|im_end|>\n'
+    '<|im_start|>user\n'
+    '{}<|im_end|>\n'  # filled with format string
+    '<|im_start|>assistant\n',
 
     # 3. chinese template
-    '<|start_header_id|>system<|end_header_id|>\n\n'
-    '你是一个很有帮助的AI助手，请用简体中文回答.'
-    '<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n'
-    '{}'  # filled with format string
-    '<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n',
+    '<|im_start|>system\n'
+    '你是通义千问，由阿里云团队开发，你是一个很有帮助的AI助手，请用简体中文回答<|im_end|>\n'
+    '<|im_start|>user\n'
+    '{}<|im_end|>\n'  # filled with format string
+    '<|im_start|>assistant\n',
 ]
 
 
-class Llama3(BaseBHM):
+class Qwen2_5(BaseBHM):
     def __init__(self, cfg: BenchmarkConfig):
         super().__init__(cfg)
 
         print(f'---------- initialize model {self.cfg.model_name_or_path} ----------')
         print(f'##### loading tokenizer...')
-        self.tokenizer = AutoTokenizer.from_pretrained(cfg.model_name_or_path, trust_remote_code=True,
-                                                       add_bos_token=True, add_eos_token=False)
-        self.tokenizer.pad_token = self.tokenizer.eos_token
+        self.tokenizer = AutoTokenizer.from_pretrained(cfg.model_name_or_path, trust_remote_code=True)
         self.tokenizer.padding_side = 'left'
         self.show_tokenizer()
 

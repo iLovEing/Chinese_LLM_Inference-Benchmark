@@ -1,7 +1,7 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
-from .model_base import BaseBHM
+from ._base import BaseBHM
 from util import BenchmarkConfig
 
 
@@ -66,7 +66,7 @@ class BlueLM(BaseBHM):
                 top_k=self.cfg.top_k,
                 # return_dict_in_generate=True
             )
-            print(f'##### output shape: {result.shape}')
+            print(f'output shape: {result.shape}')
             for idx in range(result.shape[0]):
                 print(f'\n##### case {idx + 1}:')
                 print(self.tokenizer.decode(result[idx], skip_special_tokens=self.cfg.skip_special_tokens))
