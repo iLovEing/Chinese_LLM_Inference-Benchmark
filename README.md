@@ -22,6 +22,7 @@ python main.py --config base.yml
 - generate_input: 推理配置，用于测试的输入列表
 - few_shot: benchmark配置, 用于生成prompt的shot数量，设为0表示zero-shot
 - strict_bhm: benchmark配置, 对于选择题类型的benchmark, 有多种评判方式, 一种是生成正确答案的选项则认为模型推理正确，另一种是在所有可选答案中正确答案的prob最高则认为模型推理正确，这里strict表示前者，否则为后者
+
 其他关于模型加载、推理的代码和配置，请根据自己的GPU配置自行修改。
 
 ## 评测结果
