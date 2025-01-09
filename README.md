@@ -4,7 +4,7 @@
 ## Guide
 #### 1. 简介
 起因是准备训练一个自己垂域的LLM，需要在中文能力比较好的模型里面挑选一个作为基座，于是便有了这个工程。  
-工程为纯python代码, 基于huggingface, 包含了各模型的instruct prompt模板, 给初步了解模型、模型推理和本地测评做一点参考, 正式的benchmark参考[OpenCompass](https://opencompass.org.cn/home)等在线工具。
+工程为纯python代码, 基于huggingface, 包含了各模型的instruct prompt模板, 给初步了解模型、模型推理和本地测评工作做一点参考, 正式的online benchmark移步[OpenCompass](https://opencompass.org.cn/home)等工具。
 
 #### 2. Quickstart
 ```sh
