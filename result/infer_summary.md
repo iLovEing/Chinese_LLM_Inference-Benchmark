@@ -1,4 +1,5 @@
 # Inference Summary
+
 ## model: [Qwen2_5]-[Qwen/Qwen2.5-7B-Instruct]
 
 ### case 1
@@ -99,6 +100,7 @@ assistant
 \[x + 5 = 0 \Rightarrow x = -5\]
 
 ```
+
 ## model: [Llama3]-[meta-llama/Llama-3.1-8B-Instruct]
 
 ### case 1
@@ -213,6 +215,7 @@ x - 1 = 0 --> x = 1
 
 两种方法都得到了相同的结果：方程 x^2 + 4x - 5 = 0 的两个解是 x = 1 和 x = -5。
 ```
+
 ## model: [BlueLM]-[vivo-ai/BlueLM-7B-Chat]
 
 ### case 1

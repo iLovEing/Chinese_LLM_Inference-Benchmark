@@ -82,7 +82,7 @@ def generate_infer_md():
 
         with open(infer_result, 'r', encoding='utf-8') as f:
             content = f.read()
-            md_str += ('\n' + content)
+            md_str += ('\n\n' + content)
 
     print(md_str)
     with open('infer_summary.md', 'w', encoding='utf-8') as f:
