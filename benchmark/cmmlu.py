@@ -77,13 +77,14 @@ name_en2zh = {
 
 
 class CMMLU:
-    benchmark: str = 'cmmlu'
     bhm_type: str = 'choice'
 
     def __init__(self, cfg: BenchmarkConfig):
         self.cfg = cfg
 
-        self.data_dir = cfg.data_dir
+
+        self.data_dir = self.cfg.data_dir
+        self.save_dir = os.path.join(self.cfg.result_dir, self.cfg.model, self.cfg.benchmark)
         self.subjects = sorted([f.split(".csv")[0] for f in os.listdir(os.path.join(cfg.data_dir, "test/"))])
         print(f'##### init CMMLU benchmark, data dir: {self.data_dir}, subjects num: {len(self.subjects)}\n')
 
@@ -107,7 +108,7 @@ class CMMLU:
 
     def run_benchmark(self, model_api):
         print(f'----- run CMMLU benchmark, model {self.cfg.model} -----')
-        os.makedirs(self.cfg.result_dir, exist_ok=True)
+        os.makedirs(self.save_dir, exist_ok=True)
 
         for subject in self.subjects:
             dev_df = pd.read_csv(os.path.join(self.data_dir, "dev", subject + ".csv"), header=0, index_col=0)
@@ -118,13 +119,13 @@ class CMMLU:
             test_qst, test_ans = self.get_question_answer(test_df)
 
             result_csv_name = f'{"un" if not self.cfg.strict_bhm else ""}strict_{self.cfg.few_shot}_shot_{subject}.csv'
-            result_csv = os.path.join(self.cfg.result_dir, result_csv_name)
+            result_csv = os.path.join(self.save_dir, result_csv_name)
             if not self.cfg.force_refresh and os.path.exists(result_csv):  # If result file exist, skip this subject
                 print(f'file {result_csv} already exists, skip refresh.')
                 continue
 
             generate_results, choice_results, logits = model_api(
-                ChoiceBenchmark(benchmark=self.benchmark,
+                ChoiceBenchmark(benchmark=self.cfg.benchmark,
                                 name_EN=subject,
                                 name_CH=name_en2zh[subject],
                                 choices=choices,
@@ -149,12 +150,12 @@ class CMMLU:
 
     def summary(self):
         summary_file_name = f'_{"un" if not self.cfg.strict_bhm else ""}strict_{self.cfg.few_shot}_shot_summary.txt'
-        summary = os.path.join(self.cfg.result_dir, summary_file_name)
+        summary = os.path.join(self.save_dir, summary_file_name)
         if not self.cfg.force_refresh and os.path.exists(summary):
             print(f'file {summary} already exists, skip refresh.')
             return
 
-        subject_result_csv = os.listdir(self.cfg.result_dir)
+        subject_result_csv = os.listdir(self.save_dir)
         subject_result_csv = list(filter(lambda f: f.endswith('.csv'), subject_result_csv))
 
         total_acc = 0.
@@ -162,7 +163,7 @@ class CMMLU:
         summary_str = ''
         for csv in sorted(subject_result_csv):
             subject_name = csv.split('.')[-2].split('result_')[-1]
-            csv_f = os.path.join(self.cfg.result_dir, csv)
+            csv_f = os.path.join(self.save_dir, csv)
             subject_df = pd.read_csv(csv_f, encoding='utf-8', index_col=None)
 
             if self.cfg.strict_bhm:

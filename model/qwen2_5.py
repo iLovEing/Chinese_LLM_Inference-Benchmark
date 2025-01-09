@@ -59,10 +59,8 @@ class Qwen2_5(BaseBHM):
 
         print(f'---------- initialize model finished. ----------\n')
 
-    def run_generate(self):
-        print(f'---------- run generate, model {self.cfg.model_name_or_path} ----------')
-        prompts = [self.generate_prompt([_input]) for _input in self.cfg.generate_input]
-        model_input = self.tokenizer(prompts, return_tensors='pt', padding=True)
+    def generate_text(self, input_text: list[str]) -> list[str]:
+        model_input = self.tokenizer(input_text, return_tensors='pt', padding=True)
         for _k, _ in model_input.items():
             model_input[_k] = model_input[_k].to(self.model.device)
 
@@ -84,10 +82,9 @@ class Qwen2_5(BaseBHM):
                 generation_config=generate_cfg,
                 # return_dict_in_generate=True
             )
-            print(f'output shape: {result.shape}')
-            for idx in range(result.shape[0]):
-                print(f'\n##### case {idx + 1}:')
-                print(self.tokenizer.decode(result[idx], skip_special_tokens=self.cfg.skip_special_tokens))
+            print(f'model inference finished, output shape: {result.shape}')
+            output_text = [self.tokenizer.decode(_tokens, skip_special_tokens=self.cfg.skip_special_tokens)
+                           for _tokens in result]
 
-        print(f'---------- run generate finish. ----------')
+        return output_text
 

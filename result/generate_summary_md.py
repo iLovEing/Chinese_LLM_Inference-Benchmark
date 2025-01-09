@@ -20,7 +20,7 @@ def get_bhm_score(model, bhm):
     return score
 
 
-def parse_summary():
+def parse_bhm_summary():
     summary = {}
     benchmarks = []
 
@@ -46,9 +46,9 @@ def parse_summary():
     return summary_df
 
 
-def main():
+def generate_bhm_md():
     md_str = '# Benchmark Summary'
-    summary_df = parse_summary()
+    summary_df = parse_bhm_summary()
     models = summary_df.index.tolist()
     benchmarks = summary_df.columns.tolist()
 
@@ -67,8 +67,30 @@ def main():
             md_str += f'{score:^{gl}}|'
 
     print(md_str)
-    with open('result.md', 'w', encoding='utf-8') as f:
+    with open('bhm_summary.md', 'w', encoding='utf-8') as f:
         f.write(md_str)
+
+
+def generate_infer_md():
+    md_str = '# Inference Summary'
+    for model in os.listdir("."):
+        if not os.path.isdir(model):
+            continue
+        infer_result = os.path.join(model, 'infer_result.md')
+        if not os.path.isfile(infer_result):
+            continue
+
+        with open(infer_result, 'r', encoding='utf-8') as f:
+            content = f.read()
+            md_str += ('\n' + content)
+
+    print(md_str)
+    with open('infer_summary.md', 'w', encoding='utf-8') as f:
+        f.write(md_str)
+
+def main():
+    generate_bhm_md()
+    generate_infer_md()
 
 
 if __name__ == '__main__':

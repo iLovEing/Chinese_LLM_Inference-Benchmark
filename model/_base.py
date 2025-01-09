@@ -1,3 +1,4 @@
+import os
 import random
 from tqdm import tqdm
 from abc import ABC, abstractmethod
@@ -19,6 +20,7 @@ class BaseBHM(ABC):
 
     def __init__(self, cfg: BenchmarkConfig):
         self.cfg = cfg
+        self.save_dir = os.path.join(self.cfg.result_dir, self.cfg.model)
 
     def show_tokenizer(self):
         print(self.tokenizer.vocab_size, self.tokenizer.model_max_length)
@@ -41,8 +43,23 @@ class BaseBHM(ABC):
         return self.prompt_templates.format(*input_txt)
 
     @abstractmethod
+    def generate_text(self, input_txt: list[str]) -> list[str]:
+        return []
+
     def run_generate(self):
-        pass
+        print(f'---------- run generate, model {self.cfg.model_name_or_path} ----------')
+        prompts = [self.generate_prompt([_input]) for _input in self.cfg.generate_input]
+        output_text = self.generate_text(prompts)
+
+        result_str = f'## model: [{self.cfg.model}]-[{self.cfg.model_name_or_path}]'
+        for idx in range(len(output_text)):
+            result_str += f'\n\n### case {idx + 1}'
+            result_str += ('\n```\n' + output_text[idx] + '\n```')
+
+        print(result_str)
+        with open(os.path.join(self.save_dir, 'infer_result.md'), 'w', encoding='utf-8') as f:
+            f.write(result_str)
+        print(f'---------- run generate finish. ----------')
 
     def generate_choice_bhm_prompt(self, bhm_subject: ChoiceBenchmark):
         """

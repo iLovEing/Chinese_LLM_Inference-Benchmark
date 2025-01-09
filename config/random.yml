@@ -2,7 +2,7 @@ paths:
   model_name_or_path:
     win: random
     linux: random
-  save_root_dir:
+  result_dir:
     win: result
     linux: result
 
@@ -12,5 +12,5 @@ model: Random  # model-benchmark class name
 do_benchmark: true
 
 # benchmark_config, only take effect at benchmark mode
-force_refresh: false
+force_refresh: true
 

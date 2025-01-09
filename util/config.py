@@ -63,11 +63,12 @@ class BenchmarkConfig:
         yaml_cfg.pop('paths')
 
         # set default config
-        if 'data_dir' not in yaml_cfg:
-            yaml_cfg['data_dir'] = os.path.join('dataset', yaml_cfg['benchmark'].lower())
-        save_root_dir = yaml_cfg['save_root_dir'] if 'save_root_dir' in yaml_cfg else 'result'
-        yaml_cfg['result_dir'] = os.path.join(save_root_dir, f'{yaml_cfg["model"]}', f'{yaml_cfg["benchmark"]}')
-        yaml_cfg.pop('save_root_dir')
+        yaml_cfg['data_dir'] = os.path.join('dataset', yaml_cfg['benchmark']) \
+            if 'data_dir' not in yaml_cfg \
+            else yaml_cfg['data_dir']
+        yaml_cfg['result_dir'] = 'result' \
+            if 'result_dir' not in yaml_cfg \
+            else yaml_cfg['result_dir']
 
     def parse_config(self):
         with open(self.cfg_path, 'r') as f:
