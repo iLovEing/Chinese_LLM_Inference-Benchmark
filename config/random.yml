@@ -7,8 +7,9 @@ paths:
     linux: result
 
 # behavior
-benchmark: CMMLU
-model: Random  # model-benchmark class name
+benchmark: CMMLU # benchmark name and module
+model: random # model name
+model_module: Random  # model class name
 do_benchmark: true
 
 # benchmark_config, only take effect at benchmark mode

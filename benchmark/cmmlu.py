@@ -181,7 +181,7 @@ class CMMLU:
             summary_str += f'{temp_str}\n'
 
         temp_str = (f'summary: total num {total_items} | acc {total_acc / total_items:.5f}\n'
-                    f'model: [{self.cfg.model}]-[{self.cfg.model_name_or_path}]')
+                    f'model: [{self.cfg.model}]')
         print(temp_str)
         summary_str = temp_str + '\n\n' + summary_str
         with open(summary, 'w', encoding='utf-8') as f:

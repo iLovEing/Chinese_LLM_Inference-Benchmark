@@ -12,9 +12,11 @@ class BenchmarkConfig:
     data_dir: str = None
     result_dir: str = None
 
+
     # behavior
-    benchmark: str = None
-    model: str = None  # model-benchmark class name
+    benchmark: str = None  # benchmark name and module
+    model: str = None  # model name
+    model_module: str = None  # model class name
     load_in_8bit: bool = False
     do_test_infer: bool = False
     do_benchmark: bool = False

@@ -1,5 +1,5 @@
 summary: total num 46328 | acc 0.42827
-model: [Llama3]-[meta-llama/Llama-3.1-8B-Instruct]
+model: [llama3.1-8B-Instruct]
 
 subject: strict_0_shot_agronomy    | num: 169   | acc: 0.08876
 subject: strict_0_shot_anatomy     | num: 148   | acc: 0.06081

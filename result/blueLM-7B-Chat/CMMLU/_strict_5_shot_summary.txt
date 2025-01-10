@@ -1,5 +1,5 @@
 summary: total num 46328 | acc 0.75762
-model: [BlueLM]-[vivo-ai/BlueLM-7B-Chat]
+model: [blueLM-7B-Chat]
 
 subject: strict_0_shot_agronomy    | num: 169   | acc: 0.70414
 subject: strict_0_shot_anatomy     | num: 148   | acc: 0.80405

@@ -20,7 +20,7 @@ def main():
     benchmark = benchmark_module(cfg=benchmark_cfg)
 
     # get model
-    model_module = getattr(importlib.import_module('model'), benchmark_cfg.model)  # dynamic load model
+    model_module = getattr(importlib.import_module('model'), benchmark_cfg.model_module)  # dynamic load model
     model = model_module(cfg=benchmark_cfg)
 
     if benchmark_cfg.do_test_infer:

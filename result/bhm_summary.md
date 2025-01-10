@@ -1,7 +1,7 @@
 # Benchmark Summary
-|     model     |     CMMLU     |
-| ------------- | ------------- |
-|    Qwen2_5    |     80.42     |
-|    Random     |     24.98     |
-|    Llama3     |     55.67     |
-|    BlueLM     |     76.57     |
+|          model          |  CMMLU   |
+| ----------------------- | -------- |
+|   qwen2.5-7B-Instruct   |  80.42   |
+|     blueLM-7B-Chat      |  76.56   |
+|         Random          |  24.98   |
+|  llama3.1-8B-Instruct   |  55.90   |

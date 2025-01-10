@@ -8,16 +8,20 @@ def get_bhm_score(model, bhm):
             fst_line = f.readline()
             score_index = fst_line.find('acc') + len('acc')
             score = re.findall(r'\d+\.\d+|\d+', fst_line[score_index:])[0]
-            return f'{float(score) * 100.0:.2f}'
+            return float(score)
 
 
     score = None
     if bhm == "CMMLU":
-        txt_file = os.path.join(model, bhm, '_unstrict_5_shot_summary.txt')
-        if os.path.exists(txt_file):
-            score = _parse_cmmlu_score(txt_file)
+        score = 0.
+        for _file in os.listdir(os.path.join(model, bhm)):
+            if not _file.endswith(".txt"):
+                continue
+            txt_file = os.path.join(model, bhm, _file)
+            temp_score = _parse_cmmlu_score(txt_file)
+            score = max(score, temp_score)
 
-    return score
+    return f'{float(score) * 100.0:.2f}'
 
 
 def parse_bhm_summary():
@@ -52,19 +56,20 @@ def generate_bhm_md():
     models = summary_df.index.tolist()
     benchmarks = summary_df.columns.tolist()
 
-    gl = 15  # grid len
-    md_str += f'\n|{"model":^{gl}}|'
+    model_gl = 25  # grid len
+    score_gl = 10
+    md_str += f'\n|{"model":^{model_gl}}|'
     for bhm in benchmarks:
-        md_str += f'{bhm:^{gl}}|'
+        md_str += f'{bhm:^{score_gl}}|'
 
-    md_str += '\n|'
-    for _ in range(len(benchmarks) + 1):
-        md_str += (' ' + '-' * (gl - 2) + ' |')
+    md_str += ('\n| ' + '-' * (model_gl - 2) + ' |')
+    for _ in range(len(benchmarks)):
+        md_str += (' ' + '-' * (score_gl - 2) + ' |')
 
     for model in models:
-        md_str += f'\n|{model:^{gl}}|'
+        md_str += f'\n|{model:^{model_gl}}|'
         for score in summary_df.loc[model].tolist():
-            md_str += f'{score:^{gl}}|'
+            md_str += f'{score:^{score_gl}}|'
 
     print(md_str)
     with open('bhm_summary.md', 'w', encoding='utf-8') as f:

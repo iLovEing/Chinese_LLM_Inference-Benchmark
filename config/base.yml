@@ -7,8 +7,9 @@ paths:
     linux: result
 
 # behavior
-benchmark: CMMLU
-model: Llama3  # model-benchmark class name
+benchmark: CMMLU # benchmark name and module
+model: llama3.1-8B-Instruct  # model name
+model_module: Llama3  # model class name
 load_in_8bit: false
 do_benchmark: false
 do_test_infer: true
@@ -17,7 +18,7 @@ do_test_infer: true
 skip_special_tokens: true  # set true to avoid show special_tokens such as pad_token
 max_new_tokens: 512
 do_sample: True
-num_beams: 5
+num_beams: 1
 temperature: 0.9
 top_p: 0.75
 top_k: 50

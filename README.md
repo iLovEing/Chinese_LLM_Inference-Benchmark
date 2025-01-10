@@ -15,8 +15,9 @@ python main.py --config base.yml
 所有的参数都在yml中配置，关键参数：
 - model_name_or_path: 模型路径，用于transformers接口, 仅支持huggingface路径或本地路径.
 - result_dir: 结果保存路径
-- benchmark: benchmmark类名, 在benchmark文件夹下自动寻找
-- model: model类名, 在model文件夹下自动寻找
+- benchmark: benchmmark类名, 用于类自动匹配，在benchmark文件夹下寻找
+- model: model名, 主要影响结果打印和保存路径
+- model_module: model类名, 用于类自动匹配
 - do_benchmark: 跑benchmark
 - do_test_infer: 跑推理测试
 - generate_input: 推理配置，用于测试的输入列表
@@ -152,6 +153,7 @@ x - 1 = 0 --> x = 1
 
 ## todo
 - [x] 集中展示推理和评测结构
+- [ ] cot benchmark
 - [ ] vllm 推理接口
 - [ ] 添加模型对话接口
 - [ ] more model...
