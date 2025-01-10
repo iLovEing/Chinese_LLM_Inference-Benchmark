@@ -1,8 +1,8 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
-from ._base import BaseBHM
-from util import BenchmarkConfig
+from ._base import BaseModel
+from util import GlobalConfig
 
 
 """
@@ -24,8 +24,8 @@ PROMPT_TEMPLATES = [
 ]
 
 
-class BlueLM(BaseBHM):
-    def __init__(self, cfg: BenchmarkConfig):
+class BlueLM(BaseModel):
+    def __init__(self, cfg: GlobalConfig):
         super().__init__(cfg)
 
         print(f'---------- initialize model {self.cfg.model_name_or_path} ----------')

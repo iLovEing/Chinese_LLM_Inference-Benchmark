@@ -2,16 +2,19 @@ paths:
   model_name_or_path:
     win: random
     linux: random
+  data_dir:
+    win:
+    linux: dataset
   result_dir:
     win: result
     linux: result
 
 # behavior
-benchmark: CMMLU # benchmark name and module
-model: random # model name
+bhm_tasks:  # benchmark name and module
+  - CMMLU
+  - CEval
+model: random  # model class name
 model_module: Random  # model class name
 do_benchmark: true
-
-# benchmark_config, only take effect at benchmark mode
 force_refresh: true
 

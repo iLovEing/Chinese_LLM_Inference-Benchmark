@@ -2,17 +2,23 @@ paths:
   model_name_or_path:
     win: vivo-ai/BlueLM-7B-Chat
     linux: vivo-ai/BlueLM-7B-Chat  # vivo-ai/BlueLM-7B-Base-32K, vivo-ai/BlueLM-7B-Chat, vivo-ai/BlueLM-7B-Chat-32K
+  data_dir:
+    win:
+    linux: dataset
   result_dir:
     win: result
     linux: result
 
 # behavior
-benchmark: CMMLU # benchmark name and module
+bhm_tasks:  # benchmark name and module
+  - CMMLU
+  - CEval
 model: blueLM-7B-Chat  # model name
 model_module: BlueLM  # model class name
 load_in_8bit: false
 do_benchmark: false
 do_test_infer: true
+force_refresh: false
 
 # generate_config, only take effect at generate mode
 skip_special_tokens: true  # set true to avoid show special_tokens such as pad_token when decoding
@@ -33,7 +39,6 @@ generate_input:
 few_shot: 5  # set 0 means zero-shot
 random_shot: true
 max_length: 4096
-batch_size: 4
+batch_size: 5
 strict_bhm: true
-force_refresh: false
 

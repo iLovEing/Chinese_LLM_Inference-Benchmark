@@ -7,20 +7,20 @@ import torch
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-from util import BenchmarkConfig
+from util import GlobalConfig
 from benchmark import ChoiceBenchmark
 
 
 # base benchmark pipeline
-class BaseBHM(ABC):
-    cfg: BenchmarkConfig
+class BaseModel(ABC):
+    cfg: GlobalConfig
     tokenizer: AutoTokenizer
     model: AutoModelForCausalLM
     prompt_templates: str
 
-    def __init__(self, cfg: BenchmarkConfig):
+    def __init__(self, cfg: GlobalConfig):
         self.cfg = cfg
-        self.save_dir = os.path.join(self.cfg.result_dir, self.cfg.model)
+        self.save_root = os.path.join(self.cfg.result_dir, self.cfg.model)
 
     def show_tokenizer(self):
         print(self.tokenizer.vocab_size, self.tokenizer.model_max_length)
@@ -57,8 +57,12 @@ class BaseBHM(ABC):
             result_str += ('\n```\n' + output_text[idx] + '\n```')
 
         print(result_str)
-        with open(os.path.join(self.save_dir, 'infer_result.md'), 'w', encoding='utf-8') as f:
-            f.write(result_str)
+        save_f = os.path.join(self.save_root, 'infer_result.md')
+        if not os.path.exists(save_f) or self.cfg.force_refresh:
+            with open(save_f, 'w', encoding='utf-8') as f:
+                f.write(result_str)
+        else:
+            print(f'file {save_f} already exists, skip refresh.')
         print(f'---------- run generate finish. ----------')
 
     def generate_choice_bhm_prompt(self, bhm_subject: ChoiceBenchmark):
@@ -105,7 +109,7 @@ class BaseBHM(ABC):
             prompts.append(final_input)
         return prompts
 
-    def choice_bhm_api(self, bhm_subject: ChoiceBenchmark):
+    def choice_bhm_api(self, benchmark: str, bhm_subject: ChoiceBenchmark):
         assert self.cfg.few_shot >= 0, f'invalid arg few_shot: {self.cfg.few_shot}'
 
         prompts = self.generate_choice_bhm_prompt(bhm_subject)
@@ -121,7 +125,7 @@ class BaseBHM(ABC):
         choice_results = []
         logits = []
         with torch.no_grad():
-            for batch in tqdm(infer_loader, desc=f'run choice benchmark [{self.cfg.benchmark}-{bhm_subject.name_EN}-{bhm_subject.name_CH}]'):
+            for batch in tqdm(infer_loader, desc=f'run choice benchmark [{benchmark}-{bhm_subject.name_EN}-{bhm_subject.name_CH}]'):
                 for _k, _ in batch.items():
                     batch[_k] = batch[_k].to(self.model.device)
                 model_output = self.model(**batch)

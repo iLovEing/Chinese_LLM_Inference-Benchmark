@@ -1,1 +1,1 @@
-from .config import BenchmarkConfig
+from .config import GlobalConfig

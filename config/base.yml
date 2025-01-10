@@ -13,6 +13,7 @@ model_module: Llama3  # model class name
 load_in_8bit: false
 do_benchmark: false
 do_test_infer: true
+force_refresh: false
 
 # generate_config, only take effect at generate mode
 skip_special_tokens: true  # set true to avoid show special_tokens such as pad_token
@@ -35,5 +36,4 @@ random_shot: true
 max_length: 4096
 batch_size: 6
 strict_bhm: false  # strict: use the output of last token to match label, otherwise use the highest logits of add choices
-force_refresh: false
 

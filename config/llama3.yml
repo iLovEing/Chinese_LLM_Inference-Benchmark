@@ -2,17 +2,23 @@ paths:
   model_name_or_path:
     win: meta-llama/Llama-3.1-8B-Instruct
     linux: meta-llama/Llama-3.1-8B-Instruct
+  data_dir:
+    win:
+    linux: dataset
   result_dir:
     win: result
     linux: result
 
 # behavior
-benchmark: CMMLU # benchmark name and module
+bhm_tasks:  # benchmark name and module
+  - CMMLU
+  - CEval
 model: llama3.1-8B-Instruct  # model name
 model_module: Llama3  # model class name
 load_in_8bit: false
 do_benchmark: false
 do_test_infer: true
+force_refresh: false
 
 # generate_config, only take effect at generate mode
 skip_special_tokens: true  # set true to avoid show special_tokens such as pad_token
@@ -33,9 +39,6 @@ generate_input:
 few_shot: 5  # set 0 means zero-shot
 random_shot: true
 max_length: 4096
-batch_size: 6
+batch_size: 8
 strict_bhm: true  # strict: use the output of last token to match label, otherwise use the highest logits of add choices
-force_refresh: false
-
-
 

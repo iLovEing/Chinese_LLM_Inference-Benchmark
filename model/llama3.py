@@ -1,8 +1,8 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig, BitsAndBytesConfig
 
-from ._base import BaseBHM
-from util import BenchmarkConfig
+from ._base import BaseModel
+from util import GlobalConfig
 
 """
 llama3 key special token
@@ -39,8 +39,8 @@ PROMPT_TEMPLATES = [
 ]
 
 
-class Llama3(BaseBHM):
-    def __init__(self, cfg: BenchmarkConfig):
+class Llama3(BaseModel):
+    def __init__(self, cfg: GlobalConfig):
         super().__init__(cfg)
 
         print(f'---------- initialize model {self.cfg.model_name_or_path} ----------')

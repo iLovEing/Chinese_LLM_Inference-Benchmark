@@ -3,7 +3,7 @@ import re
 import pandas as pd
 
 def get_bhm_score(model, bhm):
-    def _parse_cmmlu_score(_txt):
+    def _parse_score_1(_txt):
         with open(_txt, 'r', encoding='utf-8') as f:
             fst_line = f.readline()
             score_index = fst_line.find('acc') + len('acc')
@@ -12,13 +12,13 @@ def get_bhm_score(model, bhm):
 
 
     score = None
-    if bhm == "CMMLU":
+    if bhm == "CMMLU" or bhm == 'CEval':
         score = 0.
         for _file in os.listdir(os.path.join(model, bhm)):
-            if not _file.endswith(".txt"):
+            if not _file.endswith(".txt") or 'unstrict' in _file:
                 continue
             txt_file = os.path.join(model, bhm, _file)
-            temp_score = _parse_cmmlu_score(txt_file)
+            temp_score = _parse_score_1(txt_file)
             score = max(score, temp_score)
 
     return f'{float(score) * 100.0:.2f}'

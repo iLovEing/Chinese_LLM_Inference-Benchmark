@@ -1,20 +1,20 @@
 import random
 import numpy as np
 
-from ._base import BaseBHM
-from util import BenchmarkConfig
+from ._base import BaseModel
+from util import GlobalConfig
 from benchmark import ChoiceBenchmark
 
 
-class Random(BaseBHM):
-    def __init__(self, cfg: BenchmarkConfig, seed:int =None):
+class Random(BaseModel):
+    def __init__(self, cfg: GlobalConfig, seed:int =None):
         super().__init__(cfg)
         self.seed = seed
 
-    def run_generate(self):
-        pass
+    def generate_text(self, input_txt: list[str]) -> list[str]:
+        return []
 
-    def choice_bhm_api(self, bhm_subject: ChoiceBenchmark):
+    def choice_bhm_api(self, benchmark: str, bhm_subject: ChoiceBenchmark):
         questions, labels = bhm_subject.test_qst, bhm_subject.test_ans
         choices = bhm_subject.choices
         item_num = len(questions)
