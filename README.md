@@ -5,6 +5,9 @@
 #### 1. 简介
 起因是准备训练一个特殊垂域的LLM，需要在中文能力比较好的模型里面挑选一个作为基座，于是便有了这个工程。   
 工程为纯python代码，基于huggingface后端，包含了各模型的instruct prompt模板，给了解模型、模型推理和本地测评工作做初步的参考。
+为了更好的学习模型，了解模板的special token和instruct方式，这里没有用`tokenizer.apply_chat_template`方法来构造输入，而是采用手动构造的方式。后续扩充对话api时再考虑使用该接口。  
+
+> ps： 一个查询大模型信息的网站 [ollama](https://ollama.com/)
 
 #### 2. Quickstart
 ```sh

@@ -49,8 +49,7 @@ class BlueLM(BaseModel):
 
     def generate_text(self, input_text: list[str]) -> list[str]:
         model_input = self.tokenizer(input_text, return_tensors='pt', padding=True)
-        for _k, _ in model_input.items():
-            model_input[_k] = model_input[_k].to(self.model.device)
+        model_input = model_input.to(self.model.device)
 
         print('run model inference...')
         with torch.no_grad():

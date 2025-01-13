@@ -21,6 +21,7 @@ class BaseModel(ABC):
     def __init__(self, cfg: GlobalConfig):
         self.cfg = cfg
         self.save_root = os.path.join(self.cfg.result_dir, self.cfg.model)
+        os.makedirs(self.save_root, exist_ok=True)
 
     def show_tokenizer(self):
         print(self.tokenizer.vocab_size, self.tokenizer.model_max_length)
@@ -62,7 +63,7 @@ class BaseModel(ABC):
             with open(save_f, 'w', encoding='utf-8') as f:
                 f.write(result_str)
         else:
-            print(f'file {save_f} already exists, skip refresh.')
+            print(f'\nfile {save_f} already exists, skip refresh.')
         print(f'---------- run generate finish. ----------')
 
     def generate_choice_bhm_prompt(self, bhm_subject: ChoiceBenchmark):
