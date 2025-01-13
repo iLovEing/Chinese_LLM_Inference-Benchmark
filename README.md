@@ -3,8 +3,8 @@
 
 ## Guide
 #### 1. 简介
-起因是准备训练一个自己垂域的LLM，需要在中文能力比较好的模型里面挑选一个作为基座，于是便有了这个工程。  
-工程为纯python代码, 基于huggingface, 包含了各模型的instruct prompt模板, 给初步了解模型、模型推理和本地测评工作做一点参考, 正式的online benchmark移步[OpenCompass](https://opencompass.org.cn/home)等工具。
+起因是准备训练一个特殊垂域的LLM，需要在中文能力比较好的模型里面挑选一个作为基座，于是便有了这个工程。   
+工程为纯python代码，基于huggingface后端，包含了各模型的instruct prompt模板，给了解模型、模型推理和本地测评工作做初步的参考。
 
 #### 2. Quickstart
 ```sh
@@ -14,8 +14,9 @@ python main.py --config base.yml
 #### 3. 参数解释
 所有的参数都在yml中配置，关键参数：
 - model_name_or_path: 模型路径，用于transformers接口, 仅支持huggingface路径或本地路径.
+- data_dir: 数据路径
 - result_dir: 结果保存路径
-- benchmark: benchmmark类名, 用于类自动匹配，在benchmark文件夹下寻找
+- bhm_tasks: benchmmark任务列表, 用于类自动匹配，在benchmark文件夹下寻找
 - model: model名, 主要影响结果打印和保存路径
 - model_module: model类名, 用于类自动匹配
 - do_benchmark: 跑benchmark
@@ -28,12 +29,12 @@ python main.py --config base.yml
 
 ## 评测结果
 参考 [result/bhm_summary.md](https://github.com/iLovEing/Chinese_LLM_Inference-Benchmark/blob/main/result/bhm_summary.md)
-|     model     |     CMMLU     |
-| ------------- | ------------- |
-|    Qwen2_5    |     80.42     |
-|    Random     |     24.98     |
-|    Llama3     |     55.67     |
-|    BlueLM     |     76.57     |
+|          model          |  CEval   |  CMMLU   |
+| ----------------------- | -------- | -------- |
+|   qwen2.5-7B-Instruct   |  77.42   |  80.42   |
+|     blueLM-7B-Chat      |  71.84   |  76.56   |
+|         random          |  24.89   |  25.59   |
+|  llama3.1-8B-Instruct   |  43.16   |  55.90   |
 
 ## 推理结果
 参考 [result/infer_summary.md](https://github.com/iLovEing/Chinese_LLM_Inference-Benchmark/blob/main/result/infer_summary.md), 这里贴一个llama3例子
@@ -152,10 +153,11 @@ x - 1 = 0 --> x = 1
 ```
 
 ## todo
-- [x] 集中展示推理和评测结构
 - [ ] cot benchmark
-- [ ] vllm 推理接口
 - [ ] 添加模型对话接口
 - [ ] more model...
-- [ ] more benchmark...
+- [ ] [高考](https://github.com/OpenLMLab/GAOKAO-Bench)
+- [ ] [AGIEval](https://github.com/ruixiangcui/AGIEval)
+- [ ] [MMCU](https://github.com/Felixgithub2017/MMCU)
+- [ ] 更多推理框架
 

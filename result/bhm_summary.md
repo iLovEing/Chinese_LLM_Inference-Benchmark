@@ -1,7 +1,7 @@
 # Benchmark Summary
 |          model          |  CEval   |  CMMLU   |
 | ----------------------- | -------- | -------- |
-|   qwen2.5-7B-Instruct   |  77.42   |  77.76   |
-|     blueLM-7B-Chat      |  71.84   |  75.76   |
-|         random          |   0.00   |   0.00   |
-|  llama3.1-8B-Instruct   |  43.16   |  42.87   |
+|   qwen2.5-7B-Instruct   |  77.42   |  80.42   |
+|     blueLM-7B-Chat      |  71.84   |  76.56   |
+|         random          |  24.89   |  25.59   |
+|  llama3.1-8B-Instruct   |  43.16   |  55.90   |

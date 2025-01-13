@@ -15,7 +15,7 @@ def get_bhm_score(model, bhm):
     if bhm == "CMMLU" or bhm == 'CEval':
         score = 0.
         for _file in os.listdir(os.path.join(model, bhm)):
-            if not _file.endswith(".txt") or 'unstrict' in _file:
+            if not _file.endswith(".txt"):
                 continue
             txt_file = os.path.join(model, bhm, _file)
             temp_score = _parse_score_1(txt_file)

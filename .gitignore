@@ -3,6 +3,7 @@ temp_test.ipynb
 
 #dataset
 *.csv
+*.json
 
 # IDE
 .idea/
