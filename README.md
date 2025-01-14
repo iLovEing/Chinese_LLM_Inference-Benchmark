@@ -7,7 +7,9 @@
 工程为纯python代码，基于huggingface后端，包含了各模型的instruct prompt模板，给了解模型、模型推理和本地测评工作做初步的参考。
 为了更好的学习模型，了解模板的special token和instruct方式，这里没有用`tokenizer.apply_chat_template`方法来构造输入，而是采用手动构造的方式。后续扩充对话api时再考虑使用该接口。  
 
-> ps： 一个查询大模型信息的网站 [ollama](https://ollama.com/)
+> 综合网站入口:  
+> [ollama](https://ollama.com/) : 大模型细节信息查询  
+> [Awesome Chinese LLM](https://github.com/HqWu-HITCS/Awesome-Chinese-LLM)  : 中文大模型信息整合  
 
 #### 2. Quickstart
 ```sh
@@ -159,8 +161,18 @@ x - 1 = 0 --> x = 1
 - [ ] cot benchmark
 - [ ] 添加模型对话接口
 - [ ] more model...
-- [ ] [高考](https://github.com/OpenLMLab/GAOKAO-Bench)
-- [ ] [AGIEval](https://github.com/ruixiangcui/AGIEval)
-- [ ] [MMCU](https://github.com/Felixgithub2017/MMCU)
-- [ ] 更多推理框架
-
+  - [ ] [Baichuan2](https://github.com/baichuan-inc/Baichuan2)
+  - [ ] [InternLM](https://github.com/InternLM/InternLM)
+  - [ ] [DeepSeek-V2](https://github.com/deepseek-ai/DeepSeek-V2)
+  - [ ] [Yi](https://github.com/01-ai/Yi)
+  - [ ] [Chinese-LLaMA-Alpaca-3](https://github.com/ymcui/Chinese-LLaMA-Alpaca-3)
+  - [ ] [BELLE](https://github.com/LianjiaTech/BELLE)
+  - [ ] [ChatRWKV](https://github.com/BlinkDL/ChatRWKV)
+  - [ ] [TigerBot](https://github.com/TigerResearch/TigerBot)
+  - [ ] [YAYI2](https://github.com/wenge-research/YAYI2)
+  - [ ] [MiniCPM](https://github.com/OpenBMB/MiniCPM)
+  - [ ] [Mengzi3](https://github.com/Langboat/Mengzi3)
+- more benchmark...
+  - [ ] [AGIEval](https://github.com/ruixiangcui/AGIEval)
+  - [ ] [MMCU](https://github.com/Felixgithub2017/MMCU)
+  - [ ] [高考](https://github.com/OpenLMLab/GAOKAO-Bench)

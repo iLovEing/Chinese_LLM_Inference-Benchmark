@@ -14,7 +14,7 @@ def get_bhm_score(model, bhm):
     score = None
     if bhm == "CMMLU" or bhm == 'CEval':
         score = 0.
-        for _file in os.listdir(os.path.join(model, bhm)):
+        for _file in sorted(os.listdir(os.path.join(model, bhm))):
             if not _file.endswith(".txt"):
                 continue
             txt_file = os.path.join(model, bhm, _file)
@@ -28,12 +28,12 @@ def parse_bhm_summary():
     summary = {}
     benchmarks = []
 
-    for model in os.listdir("."):
+    for model in sorted(os.listdir(".")):
         if not os.path.isdir(model):
             continue
 
         summary[model] = {}
-        for bhm in os.listdir(model):
+        for bhm in sorted(os.listdir(model)):
             if not os.path.isdir(os.path.join(model, bhm)):
                 continue
             benchmarks.append(bhm) if bhm not in benchmarks else None
@@ -78,7 +78,7 @@ def generate_bhm_md():
 
 def generate_infer_md():
     md_str = '# Inference Summary'
-    for model in os.listdir("."):
+    for model in sorted(os.listdir(".")):
         if not os.path.isdir(model):
             continue
         infer_result = os.path.join(model, 'infer_result.md')
